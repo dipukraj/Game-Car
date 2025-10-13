@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Racing Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            max-height: 600px;
+            background: #1a1a2e;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: linear-gradient(180deg, #0f3460 0%, #16213e 100%);
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .sound-toggle {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            z-index: 60;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: #ffd700;
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .sound-toggle.muted {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff6b6b;
+        }
+
+        .score-panel, .lives-panel {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .score-panel h2, .lives-panel h2 {
+            color: #ffd700;
+            font-size: 16px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .score-value, .lives-value {
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .start-screen, .game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-over-screen {
+            display: none;
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            50% { text-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+        }
+
+        .game-title {
+            font-size: 64px;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4, #ffd700);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            pointer-events: auto;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        .instructions {
+            color: #fff;
+            font-size: 18px;
+            margin: 30px 0;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .control-key {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #ffd700;
+            font-weight: bold;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .mobile-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 20px;
+            z-index: 50;
+        }
+
+        .mobile-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .mobile-btn:active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+
+            .game-title {
+                font-size: 42px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .instructions {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+
+            .mobile-controls {
+                display: flex;
+            }
+
+            .controls {
+                display: none;
+            }
+            
+            .ui-overlay {
+                padding: 10px;
+            }
+            
+            .score-panel, .lives-panel {
+                padding: 10px 15px;
+            }
+            
+            .score-panel h2, .lives-panel h2 {
+                font-size: 12px;
+            }
+            
+            .score-value, .lives-value {
+                font-size: 24px;
+            }
+        }
+
+        .final-score {
+            color: #4ecdc4;
+            font-size: 36px;
+            margin: 20px 0;
+        }
+
+        .speed-control {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .speed-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .speed-btn.active {
+            background: rgba(255, 215, 0, 0.4);
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .speed-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .speed-label {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .speed-control {
+                right: 10px;
+            }
+            
+            .speed-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .footer p {
+            color: #fff;
+            font-size: 12px;
+            margin: 0;
+            text-align: center;
+        }
+
+        .footer .creator {
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                bottom: 5px;
+                font-size: 10px;
+                padding: 6px 15px;
+                z-index: 1;
+            }
+        }
+
+        .pause-control {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            z-index: 50;
+        }
+
+        .pause-btn {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .pause-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .pause-btn.paused {
+            background: rgba(76, 209, 55, 0.4);
+            border-color: #4cd137;
+            box-shadow: 0 0 20px rgba(76, 209, 55, 0.6);
+        }
+
+        .pause-label {
+            font-size: 9px;
+            margin-top: 3px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .pause-control {
+                left: 10px;
+            }
+            
+            .pause-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            
+            .pause-label {
+                font-size: 8px;
+            }
+        }
+
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 90;
+            backdrop-filter: blur(5px);
+        }
+
+        .pause-overlay h2 {
+            color: #ffd700;
+            font-size: 64px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .start-screen-footer {
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .start-screen-footer p {
+            color: #fff;
+            font-size: 14px;
+            margin: 0;
+            text-align: center;
+        }
+
+        .start-screen-footer .creator-name {
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+
+        .social-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .social-icon:nth-child(1):hover {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-color: #e6683c;
+        }
+
+        .social-icon:nth-child(2):hover {
+            background: #000;
+            border-color: #fff;
+        }
+
+        .social-icon:nth-child(3):hover {
+            background: #0077b5;
+            border-color: #0077b5;
+        }
+
+        .social-icon:nth-child(4):hover {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .start-screen-footer {
+                margin-top: 20px;
+                padding: 10px 20px;
+            }
+            
+            .start-screen-footer p {
+                font-size: 12px;
+            }
+
+            .social-icons {
+                gap: 12px;
+                margin-top: 12px;
+            }
+
+            .social-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .social-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="ui-overlay">
+            <div class="score-panel">
+                <h2>Score</h2>
+                <div class="score-value" id="score">0</div>
+            </div>
+            <div class="lives-panel">
+                <h2>Lives</h2>
+                <div class="lives-value" id="lives">❤️❤️❤️❤️❤️</div>
+            </div>
+        </div>
+
+        <div class="start-screen" id="startScreen">
+            <h1 class="game-title">🏎️ TURBO RACER</h1>
+            <div class="instructions">
+                <p>Dodge the traffic and collect coins!</p>
+                <p>Survive as long as you can and beat your high score!</p>
+                <p style="margin-top: 15px; color: #ffd700;">🔊 Press 'M' to mute/unmute sound</p>
+            </div>
+            <div class="controls">
+                <span class="control-key">← Left Arrow</span>
+                <span class="control-key">→ Right Arrow</span>
+            </div>
+            <button class="btn" onclick="startGame()">START GAME</button>
+            <div class="start-screen-footer">
+                <p>Developed with ❤️ and ☕ by <span class="creator-name">✨5ukoon</span></p>
+                <div class="social-icons">
+                    <a href="https://instagram.com/your-username" target="_blank" class="social-icon" title="Instagram">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com/your-username" target="_blank" class="social-icon" title="Twitter">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com/in/your-username" target="_blank" class="social-icon" title="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                    <a href="https://your-website.com" target="_blank" class="social-icon" title="Website">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-over-screen" id="gameOverScreen">
+            <h1>GAME OVER!</h1>
+            <div class="final-score">
+                Final Score: <span id="finalScore">0</span>
+            </div>
+            <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
+        </div>
+
+        <div class="mobile-controls">
+            <div class="mobile-btn" id="leftBtn">←</div>
+            <div class="mobile-btn" id="rightBtn">→</div>
+        </div>
+
+        <div class="speed-control">
+            <div class="speed-btn" id="slowBtn" onclick="setSpeed('slow')">
+                🐢
+                <span class="speed-label">SLOW</span>
+            </div>
+            <div class="speed-btn active" id="normalBtn" onclick="setSpeed('normal')">
+                🚗
+                <span class="speed-label">NORMAL</span>
+            </div>
+            <div class="speed-btn" id="fastBtn" onclick="setSpeed('fast')">
+                🚀
+                <span class="speed-label">FAST</span>
+            </div>
+        </div>
+
+        <div class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Toggle Sound (M)">
+            <span id="soundIcon" style="font-size: 24px;">🔊</span>
+        </div>
+
+        <div class="pause-control">
+            <div class="pause-btn" id="pauseBtn" onclick="togglePause()" title="Pause/Resume (Space)">
+                <span id="pauseIcon">⏸️</span>
+                <span class="pause-label" id="pauseLabel">PAUSE</span>
+            </div>
+        </div>
+
+        <div class="pause-overlay" id="pauseOverlay">
+            <h2>⏸️ PAUSED</h2>
+        </div>
+
+        <div class="footer">
+            <p>Created with ❤️ by <span class="creator">Dipu K Raj</span></p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let gameRunning = false;
+        let gamePaused = false;
+        let score = 0;
+        let lives = 5;
+        let baseSpeed = 3;
+        let gameSpeed = 3;
+        let speedMultiplier = 1;
+        let frameCount = 0;
+        let currentSpeedMode = 'normal';
+
+        const player = {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 70,
+            speed: 8,
+            lane: 1,
+            color: '#ff6b6b'
+        };
+
+        let roadOffset = 0;
+        const obstacles = [];
+        const obstacleColors = ['#4ecdc4', '#ffd700', '#95e1d3', '#f38181', '#aa96da'];
+        const coins = [];
+        const particles = [];
+        let lastObstacleLanes = []; // Track recent obstacle lanes to prevent blocking all lanes
+
+        // Improved Sound System using Web Audio API
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let isMuted = false;
+
+        function playSound(frequency, duration, type = 'sine', volume = 0.3) {
+            if (isMuted) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Coin collection sound - pleasant chime
+        function playCoinSound() {
+            if (isMuted) return;
+            playSound(523.25, 0.08, 'sine', 0.15);  // C5
+            setTimeout(() => playSound(659.25, 0.08, 'sine', 0.15), 40);  // E5
+            setTimeout(() => playSound(783.99, 0.12, 'sine', 0.12), 80);  // G5
+        }
+
+        // Crash sound - realistic impact
+        function playCrashSound() {
+            if (isMuted) return;
+            const now = audioContext.currentTime;
+            
+            // White noise for crash
+            const bufferSize = audioContext.sampleRate * 0.3;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            
+            const noiseGain = audioContext.createGain();
+            noiseGain.gain.setValueAtTime(0.2, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            
+            noise.connect(noiseGain);
+            noiseGain.connect(audioContext.destination);
+            noise.start(now);
+            
+            // Low thump
+            playSound(80, 0.2, 'sine', 0.25);
+        }
+
+        // Smooth engine sound - removed to reduce irritation
+        let engineSoundInterval = null;
+
+        function startEngineSound() {
+            // Engine sound disabled - was irritating
+            // Can be re-enabled if needed with better implementation
+        }
+
+        function stopEngineSound() {
+            if (engineSoundInterval) {
+                clearInterval(engineSoundInterval);
+                engineSoundInterval = null;
+            }
+        }
+
+        // Game over sound - descending tones
+        function playGameOverSound() {
+            if (isMuted) return;
+            playSound(392, 0.15, 'triangle', 0.2);  // G4
+            setTimeout(() => playSound(349.23, 0.15, 'triangle', 0.2), 150);  // F4
+            setTimeout(() => playSound(293.66, 0.15, 'triangle', 0.2), 300);  // D4
+            setTimeout(() => playSound(261.63, 0.3, 'triangle', 0.2), 450);  // C4
+        }
+
+        // Start sound - ascending victory fanfare
+        function playStartSound() {
+            if (isMuted) return;
+            playSound(261.63, 0.1, 'triangle', 0.15);  // C4
+            setTimeout(() => playSound(329.63, 0.1, 'triangle', 0.15), 80);  // E4
+            setTimeout(() => playSound(392, 0.1, 'triangle', 0.15), 160);  // G4
+            setTimeout(() => playSound(523.25, 0.15, 'triangle', 0.15), 240);  // C5
+        }
+
+        // Lane change sound - quick swoosh
+        function playLaneChangeSound() {
+            if (isMuted) return;
+            playSound(600, 0.04, 'sine', 0.08);
+            setTimeout(() => playSound(400, 0.04, 'sine', 0.06), 30);
+        }
+
+        function toggleSound() {
+            isMuted = !isMuted;
+            const soundIcon = document.getElementById('soundIcon');
+            const soundToggle = document.getElementById('soundToggle');
+            
+            if (isMuted) {
+                soundIcon.textContent = '🔇';
+                soundToggle.classList.add('muted');
+                stopEngineSound();
+            } else {
+                soundIcon.textContent = '🔊';
+                soundToggle.classList.remove('muted');
+                if (gameRunning) {
+                    startEngineSound();
+                }
+            }
+        }
+
+        function initPlayer() {
+            player.lane = 1;
+            updatePlayerPosition();
+            player.y = canvas.height - player.height - 50;
+        }
+
+        function updatePlayerPosition() {
+            const laneWidth = canvas.width / 3;
+            player.x = player.lane * laneWidth + (laneWidth - player.width) / 2;
+        }
+
+        function drawPlayer() {
+            ctx.save();
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(player.x + 5, player.y + 10, player.width - 10, 20);
+            
+            ctx.fillStyle = '#333';
+            ctx.fillRect(player.x - 5, player.y + 15, 8, 15);
+            ctx.fillRect(player.x + player.width - 3, player.y + 15, 8, 15);
+            ctx.fillRect(player.x - 5, player.y + player.height - 30, 8, 15);
+            ctx.fillRect(player.x + player.width - 3, player.y + player.height - 30, 8, 15);
+            
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(player.x + 8, player.y + player.height - 5, 10, 5);
+            ctx.fillRect(player.x + player.width - 18, player.y + player.height - 5, 10, 5);
+            
+            ctx.restore();
+        }
+
+        function drawRoad() {
+            ctx.fillStyle = '#2d3436';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([20, 15]);
+            
+            const laneWidth = canvas.width / 3;
+            
+            for (let i = 1; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * laneWidth, 0);
+                ctx.lineTo(i * laneWidth, canvas.height);
+                ctx.stroke();
+            }
+            
+            roadOffset += gameSpeed;
+            if (roadOffset > 35) roadOffset = 0;
+            ctx.lineDashOffset = -roadOffset;
+            
+            ctx.setLineDash([]);
+        }
+
+        function createObstacle() {
+            const laneWidth = canvas.width / 3;
+            let lane;
+            
+            // Check which lanes currently have obstacles near the top of screen
+            const topScreenThreshold = 300; // Check obstacles in top 300px
+            const occupiedLanes = obstacles
+                .filter(obs => obs.y < topScreenThreshold && obs.y > -100)
+                .map(obs => obs.lane);
+            
+            // Get available lanes (not occupied in top screen area)
+            let availableLanes = [0, 1, 2].filter(l => !occupiedLanes.includes(l));
+            
+            // If no lanes available, don't spawn obstacle this frame
+            if (availableLanes.length === 0) {
+                return;
+            }
+            
+            // Prefer lanes not recently used
+            let preferredLanes = availableLanes.filter(l => !lastObstacleLanes.includes(l));
+            
+            // If all available lanes were recently used, use any available lane
+            if (preferredLanes.length === 0) {
+                preferredLanes = availableLanes;
+            }
+            
+            // Choose a random lane from preferred lanes
+            lane = preferredLanes[Math.floor(Math.random() * preferredLanes.length)];
+            
+            // Add to recent lanes and keep only last 1 obstacle
+            lastObstacleLanes = [lane];
+            
+            const obstacle = {
+                x: lane * laneWidth + (laneWidth - 40) / 2,
+                y: -70,
+                width: 40,
+                height: 70,
+                lane: lane,
+                color: obstacleColors[Math.floor(Math.random() * obstacleColors.length)]
+            };
+            obstacles.push(obstacle);
+        }
+
+        function createCoin() {
+            const laneWidth = canvas.width / 3;
+            const lane = Math.floor(Math.random() * 3);
+            const coin = {
+                x: lane * laneWidth + laneWidth / 2 - 15,
+                y: -30,
+                width: 30,
+                height: 30,
+                lane: lane,
+                rotation: 0
+            };
+            coins.push(coin);
+        }
+
+        function drawObstacle(obs) {
+            ctx.fillStyle = obs.color;
+            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(obs.x + 5, obs.y + obs.height - 30, obs.width - 10, 20);
+            
+            ctx.fillStyle = '#333';
+            ctx.fillRect(obs.x - 5, obs.y + 15, 8, 15);
+            ctx.fillRect(obs.x + obs.width - 3, obs.y + 15, 8, 15);
+            ctx.fillRect(obs.x - 5, obs.y + obs.height - 30, 8, 15);
+            ctx.fillRect(obs.x + obs.width - 3, obs.y + obs.height - 30, 8, 15);
+        }
+
+        function drawCoin(coin) {
+            ctx.save();
+            ctx.translate(coin.x + coin.width / 2, coin.y + coin.height / 2);
+            ctx.rotate(coin.rotation);
+            
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(0, 0, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ffed4e';
+            ctx.beginPath();
+            ctx.arc(0, 0, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('$', 0, 0);
+            
+            ctx.restore();
+            
+            coin.rotation += 0.1;
+        }
+
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 10; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 30,
+                    color: color
+                });
+            }
+        }
+
+        function drawParticles() {
+            particles.forEach((p, index) => {
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life / 30;
+                ctx.fillRect(p.x, p.y, 5, 5);
+                ctx.globalAlpha = 1;
+                
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                
+                if (p.life <= 0) {
+                    particles.splice(index, 1);
+                }
+            });
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function updateGame() {
+            if (!gameRunning || gamePaused) return;
+
+            frameCount++;
+            
+            if (frameCount % 90 === 0) {
+                createObstacle();
+            }
+            
+            if (frameCount % 120 === 0) {
+                createCoin();
+            }
+            
+            obstacles.forEach((obs, index) => {
+                obs.y += gameSpeed;
+                
+                if (obs.y > canvas.height) {
+                    obstacles.splice(index, 1);
+                    score += 10;
+                    updateScore();
+                }
+                
+                if (checkCollision(player, obs)) {
+                    createParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, '#ff6b6b');
+                    obstacles.splice(index, 1);
+                    lives--;
+                    updateLives();
+                    playCrashSound();
+                    
+                    if (lives <= 0) {
+                        gameOver();
+                    }
+                }
+            });
+            
+            coins.forEach((coin, index) => {
+                coin.y += gameSpeed;
+                
+                if (coin.y > canvas.height) {
+                    coins.splice(index, 1);
+                }
+                
+                if (checkCollision(player, coin)) {
+                    createParticles(coin.x + coin.width / 2, coin.y + coin.height / 2, '#ffd700');
+                    coins.splice(index, 1);
+                    score += 50;
+                    updateScore();
+                    playCoinSound();
+                }
+            });
+            
+            if (frameCount % 500 === 0 && baseSpeed < 8) {
+                baseSpeed += 0.3;
+                updateGameSpeed();
+            }
+        }
+
+        function drawGame() {
+            drawRoad();
+            
+            obstacles.forEach(obs => drawObstacle(obs));
+            coins.forEach(coin => drawCoin(coin));
+            
+            drawPlayer();
+            drawParticles();
+        }
+
+        function gameLoop() {
+            updateGame();
+            drawGame();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function updateLives() {
+            const hearts = '❤️'.repeat(Math.min(lives, 5));
+            const extraLives = lives > 5 ? ` +${lives - 5}` : '';
+            document.getElementById('lives').textContent = (hearts || '💀') + extraLives;
+        }
+
+        function updateGameSpeed() {
+            if (currentSpeedMode === 'slow') {
+                gameSpeed = baseSpeed * 0.6;
+            } else if (currentSpeedMode === 'normal') {
+                gameSpeed = baseSpeed * 1;
+            } else if (currentSpeedMode === 'fast') {
+                gameSpeed = baseSpeed * 1.5;
+            }
+        }
+
+        function setSpeed(mode) {
+            currentSpeedMode = mode;
+            updateGameSpeed();
+            
+            document.getElementById('slowBtn').classList.remove('active');
+            document.getElementById('normalBtn').classList.remove('active');
+            document.getElementById('fastBtn').classList.remove('active');
+            
+            if (mode === 'slow') {
+                document.getElementById('slowBtn').classList.add('active');
+            } else if (mode === 'normal') {
+                document.getElementById('normalBtn').classList.add('active');
+            } else if (mode === 'fast') {
+                document.getElementById('fastBtn').classList.add('active');
+            }
+        }
+
+        function togglePause() {
+            if (!gameRunning) return;
+            
+            gamePaused = !gamePaused;
+            const pauseOverlay = document.getElementById('pauseOverlay');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const pauseLabel = document.getElementById('pauseLabel');
+            const pauseBtn = document.getElementById('pauseBtn');
+            
+            if (gamePaused) {
+                pauseOverlay.style.display = 'flex';
+                pauseIcon.textContent = '▶️';
+                pauseLabel.textContent = 'RESUME';
+                pauseBtn.classList.add('paused');
+                stopEngineSound();
+            } else {
+                pauseOverlay.style.display = 'none';
+                pauseIcon.textContent = '⏸️';
+                pauseLabel.textContent = 'PAUSE';
+                pauseBtn.classList.remove('paused');
+                if (!isMuted) {
+                    startEngineSound();
+                }
+            }
+        }
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            gameRunning = true;
+            gamePaused = false;
+            score = 0;
+            lives = 5;
+            baseSpeed = 3;
+            currentSpeedMode = 'normal';
+            updateGameSpeed();
+            frameCount = 0;
+            obstacles.length = 0;
+            coins.length = 0;
+            particles.length = 0;
+            lastObstacleLanes = [];
+            
+            // Reset pause button
+            document.getElementById('pauseOverlay').style.display = 'none';
+            document.getElementById('pauseIcon').textContent = '⏸️';
+            document.getElementById('pauseLabel').textContent = 'PAUSE';
+            document.getElementById('pauseBtn').classList.remove('paused');
+            
+            setSpeed('normal');
+            initPlayer();
+            updateScore();
+            updateLives();
+            playStartSound();
+            startEngineSound();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            gamePaused = false;
+            stopEngineSound();
+            playGameOverSound();
+            document.getElementById('pauseOverlay').style.display = 'none';
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOverScreen').style.display = 'flex';
+        }
+
+        function restartGame() {
+            document.getElementById('gameOverScreen').style.display = 'none';
+            startGame();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning) return;
+            
+            if (e.key === 'ArrowLeft' && player.lane > 0) {
+                player.lane--;
+                updatePlayerPosition();
+                playLaneChangeSound();
+            } else if (e.key === 'ArrowRight' && player.lane < 2) {
+                player.lane++;
+                updatePlayerPosition();
+                playLaneChangeSound();
+            } else if (e.key === 'm' || e.key === 'M') {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    stopEngineSound();
+                } else {
+                    startEngineSound();
+                }
+            } else if (e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                togglePause();
+            } else if (e.key === 'p' || e.key === 'P') {
+                togglePause();
+            }
+        });
+
+        document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameRunning && player.lane > 0) {
+                player.lane--;
+                updatePlayerPosition();
+                playLaneChangeSound();
+            }
+        });
+
+        document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameRunning && player.lane < 2) {
+                player.lane++;
+                updatePlayerPosition();
+                playLaneChangeSound();
+            }
+        });
+
+        document.getElementById('leftBtn').addEventListener('click', (e) => {
+            if (gameRunning && player.lane > 0) {
+                player.lane--;
+                updatePlayerPosition();
+                playLaneChangeSound();
+            }
+        });
+
+        document.getElementById('rightBtn').addEventListener('click', (e) => {
+            if (gameRunning && player.lane < 2) {
+                player.lane++;
+                updatePlayerPosition();
+                playLaneChangeSound();
+            }
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>
