@@ -205,11 +205,11 @@
 
         .mobile-controls {
             position: absolute;
-            bottom: 80px;
+            bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
-            gap: 60px;
+            gap: 100px;
             z-index: 50;
         }
 
@@ -689,8 +689,8 @@
         let gamePaused = false;
         let score = 0;
         let lives = 5;
-        let baseSpeed = 3;
-        let gameSpeed = 3;
+        let baseSpeed = 4;
+        let gameSpeed = 4;
         let speedMultiplier = 1;
         let frameCount = 0;
         let currentSpeedMode = 'normal';
@@ -835,7 +835,7 @@
             updatePlayerPosition();
             // Check if mobile view
             const isMobile = window.innerWidth <= 768;
-            player.y = isMobile ? canvas.height - player.height - 180 : canvas.height - player.height - 50;
+            player.y = isMobile ? canvas.height - player.height - 250 : canvas.height - player.height - 50;
         }
 
         function updatePlayerPosition() {
@@ -1027,7 +1027,7 @@
 
             frameCount++;
             
-            if (frameCount % 90 === 0) {
+            if (frameCount % 60 === 0) {
                 createObstacle();
             }
             
@@ -1164,7 +1164,7 @@
             gamePaused = false;
             score = 0;
             lives = 5;
-            baseSpeed = 3;
+            baseSpeed = 4;
             currentSpeedMode = 'normal';
             updateGameSpeed();
             frameCount = 0;
