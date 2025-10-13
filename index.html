@@ -205,11 +205,11 @@
 
         .mobile-controls {
             position: absolute;
-            bottom: 30px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
-            gap: 20px;
+            gap: 60px;
             z-index: 50;
         }
 
@@ -375,9 +375,9 @@
 
         @media (max-width: 768px) {
             .footer {
-                bottom: 5px;
-                font-size: 10px;
-                padding: 6px 15px;
+                bottom: 10px;
+                font-size: 9px;
+                padding: 5px 12px;
                 z-index: 1;
             }
         }
@@ -833,7 +833,9 @@
         function initPlayer() {
             player.lane = 1;
             updatePlayerPosition();
-            player.y = canvas.height - player.height - 50;
+            // Check if mobile view
+            const isMobile = window.innerWidth <= 768;
+            player.y = isMobile ? canvas.height - player.height - 180 : canvas.height - player.height - 50;
         }
 
         function updatePlayerPosition() {
