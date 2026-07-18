@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Turbo Racer - Premium Edition</title>
+    <title>Turbo Racer - Ultra Smooth Edition</title>
 
     <link rel="icon" type="image/jpg" href="/image/racing car icon.png">
 
@@ -39,7 +39,7 @@
             max-height: 900px;
             background: #111420;
             border-radius: 24px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -50,7 +50,7 @@
             display: block;
         }
 
-        /* UI Overlay & HUD */
+        /* UI Overlay & HUD (High-performance solid translucent styles) */
         .ui-overlay {
             position: absolute;
             top: 0;
@@ -65,13 +65,11 @@
         }
 
         .hud-card {
-            background: rgba(15, 20, 35, 0.75);
+            background: rgba(15, 22, 38, 0.92);
             padding: 10px 18px;
             border-radius: 16px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         .hud-title {
@@ -88,17 +86,14 @@
             font-size: 24px;
             font-weight: 800;
             font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .score-value {
             color: #4ecdc4;
-            text-shadow: 0 0 12px rgba(78, 205, 196, 0.5);
         }
 
         .high-score-value {
             color: #ffd700;
-            text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
         }
 
         .lives-value {
@@ -122,26 +117,13 @@
             display: none;
             align-items: center;
             gap: 8px;
-            background: rgba(10, 15, 30, 0.85);
+            background: rgba(10, 15, 30, 0.95);
             padding: 6px 14px;
             border-radius: 20px;
-            backdrop-filter: blur(10px);
             border: 1.5px solid #00f2fe;
             color: #fff;
             font-size: 13px;
             font-weight: 700;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-            animation: pulseGlow 1.5s infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
-            }
-
-            100% {
-                box-shadow: 0 0 18px rgba(0, 242, 254, 0.8);
-            }
         }
 
         .powerup-timer-bar {
@@ -166,15 +148,14 @@
         .icon-btn {
             width: 44px;
             height: 44px;
-            background: rgba(15, 20, 35, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 22, 38, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease;
             color: #fff;
             font-size: 18px;
         }
@@ -184,13 +165,12 @@
         }
 
         .icon-btn.active {
-            background: rgba(46, 213, 115, 0.3);
+            background: rgba(46, 213, 115, 0.85);
             border-color: #2ed573;
-            box-shadow: 0 0 15px rgba(46, 213, 115, 0.5);
         }
 
         .icon-btn.muted {
-            background: rgba(235, 77, 75, 0.3);
+            background: rgba(235, 77, 75, 0.85);
             border-color: #eb4d4b;
         }
 
@@ -205,7 +185,7 @@
         .pause-btn {
             width: 58px;
             height: 58px;
-            background: rgba(15, 20, 35, 0.75);
+            background: rgba(15, 22, 38, 0.92);
             border: 2px solid rgba(255, 255, 255, 0.25);
             border-radius: 50%;
             color: #fff;
@@ -216,8 +196,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease;
             pointer-events: auto;
         }
 
@@ -226,9 +205,8 @@
         }
 
         .pause-btn.paused {
-            background: rgba(46, 213, 115, 0.4);
+            background: rgba(46, 213, 115, 0.85);
             border-color: #2ed573;
-            box-shadow: 0 0 20px rgba(46, 213, 115, 0.6);
         }
 
         .pause-label {
@@ -251,7 +229,7 @@
         .speed-btn {
             width: 54px;
             height: 54px;
-            background: rgba(15, 20, 35, 0.75);
+            background: rgba(15, 22, 38, 0.92);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             color: #fff;
@@ -262,15 +240,13 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease;
             pointer-events: auto;
         }
 
         .speed-btn.active {
-            background: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.4);
             border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         .speed-label {
@@ -318,8 +294,8 @@
         .mobile-btn {
             width: 68px;
             height: 68px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%;
             color: #fff;
             font-size: 28px;
@@ -327,14 +303,13 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.15s ease;
+            transition: transform 0.1s ease;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
 
         .mobile-btn:active,
         .mobile-btn.pressed {
-            background: rgba(255, 215, 0, 0.4);
+            background: rgba(255, 215, 0, 0.5);
             border-color: #ffd700;
             transform: scale(0.92);
         }
@@ -356,9 +331,8 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(46, 213, 115, 0.3);
-            transition: all 0.15s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease;
             user-select: none;
         }
 
@@ -366,15 +340,14 @@
         .pedal-btn.pressed {
             background: linear-gradient(180deg, #2ed573 0%, #10ac84 100%);
             color: #fff;
-            transform: translateY(6px) scale(0.95);
-            box-shadow: 0 2px 15px rgba(46, 213, 115, 0.8);
+            transform: translateY(4px) scale(0.95);
             border-color: #fff;
         }
 
         .pedal-grip {
             width: 80%;
             height: 4px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             margin: 3px 0;
             border-radius: 2px;
         }
@@ -395,13 +368,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(7, 10, 18, 0.88);
+            background: rgba(7, 10, 18, 0.92);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 100;
-            backdrop-filter: blur(12px);
             padding: 20px;
         }
 
@@ -419,23 +391,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: gradientShift 4s ease infinite;
             text-align: center;
             margin-bottom: 10px;
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
         }
 
         .instructions {
@@ -445,15 +402,15 @@
             text-align: center;
             max-width: 480px;
             line-height: 1.6;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
             padding: 15px 20px;
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .instruction-badge {
             display: inline-block;
-            background: rgba(255, 215, 0, 0.15);
+            background: rgba(255, 215, 0, 0.18);
             color: #ffd700;
             padding: 3px 10px;
             border-radius: 8px;
@@ -462,8 +419,8 @@
         }
 
         .high-score-badge {
-            background: rgba(255, 215, 0, 0.12);
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.35);
             padding: 8px 20px;
             border-radius: 30px;
             color: #ffd700;
@@ -484,7 +441,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: transform 0.15s ease;
             box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4);
             pointer-events: auto;
             letter-spacing: 1px;
@@ -495,10 +452,10 @@
         }
 
         .final-score-box {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 20px;
             padding: 20px 35px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             text-align: center;
             margin: 20px 0 30px 0;
         }
@@ -513,9 +470,9 @@
         .start-screen-footer {
             margin-top: 25px;
             padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
 
@@ -532,11 +489,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             color: #fff;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 0.15s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             text-decoration: none;
         }
 
@@ -679,7 +636,8 @@
             </div>
             <div class="instructions">
                 <p>🏎️ Dodge traffic & collect power-ups!</p>
-                <p style="margin-top: 8px;">📱 <b>Mobile Tilt:</b> Click 📱 icon on top to tilt phone to steer!</p>
+                <p style="margin-top: 8px;">📱 <b>Mobile Tilt:</b> Click 📱 icon on top right to tilt phone to steer!
+                </p>
                 <p>⚡ <b>Saletar / Accelerator:</b> Press and HOLD bottom-right 🚀 SALETAR pedal to boost speed!</p>
                 <p>💻 <b>Keyboard:</b> Arrow keys to steer | Up Arrow / W for Saletar | Space/P to Pause</p>
                 <div style="margin-top: 10px;">
@@ -725,7 +683,7 @@
 
         <!-- Game Over Screen -->
         <div class="game-over-screen" id="gameOverScreen">
-            <h1 style="color: #ff4757; font-size: 44px; text-shadow: 0 0 20px rgba(255,71,87,0.6);">GAME OVER</h1>
+            <h1 style="color: #ff4757; font-size: 44px;">GAME OVER</h1>
             <div class="final-score-box">
                 <div style="color: #aaa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Final Score
                 </div>
@@ -774,17 +732,14 @@
 
         <!-- Pause Overlay -->
         <div class="pause-overlay" id="pauseOverlay" onclick="togglePause()">
-            <h2
-                style="color: #ffd700; font-size: 48px; text-shadow: 0 0 30px rgba(255,215,0,0.8); margin-bottom: 25px;">
-                ⏸️ PAUSED</h2>
+            <h2 style="color: #ffd700; font-size: 48px; margin-bottom: 25px;">⏸️ PAUSED</h2>
             <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
-                <button class="btn"
-                    style="background: linear-gradient(135deg, #2ed573 0%, #10ac84 100%); box-shadow: 0 10px 30px rgba(46, 213, 115, 0.4);"
+                <button class="btn" style="background: linear-gradient(135deg, #2ed573 0%, #10ac84 100%);"
                     onclick="togglePause(); event.stopPropagation();">
                     ▶️ RESUME GAME
                 </button>
                 <button class="btn"
-                    style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: none; font-size: 16px; padding: 12px 32px;"
+                    style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 16px; padding: 12px 32px;"
                     onclick="restartGame(); event.stopPropagation();">
                     🔄 RESTART
                 </button>
@@ -812,13 +767,12 @@
         let baseSpeed = 3.8;
         let gameSpeed = 3.8;
         let speedMultiplier = 1;
-        let pedalBoost = 1; // Saletar accelerator boost factor
+        let pedalBoost = 1;
         let isPedalPressed = false;
         let frameCount = 0;
         let currentSpeedMode = 'normal';
         let newHighScoreAchieved = false;
         let tiltEnabled = false;
-        let lastTiltTime = 0;
 
         // Player Sports Car Object
         const player = {
@@ -855,7 +809,7 @@
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         let isMuted = false;
 
-        function playSound(frequency, duration, type = 'sine', volume = 0.25) {
+        function playSound(frequency, duration, type = 'sine', volume = 0.2) {
             if (isMuted) return;
             try {
                 const osc = audioContext.createOscillator();
@@ -873,57 +827,57 @@
 
         function playCoinSound() {
             if (isMuted) return;
-            playSound(587.33, 0.08, 'sine', 0.2);
-            setTimeout(() => playSound(880, 0.12, 'sine', 0.2), 60);
+            playSound(587.33, 0.08, 'sine', 0.15);
+            setTimeout(() => playSound(880, 0.12, 'sine', 0.15), 60);
         }
 
         function playPowerupSound() {
             if (isMuted) return;
-            playSound(440, 0.08, 'triangle', 0.3);
-            setTimeout(() => playSound(554.37, 0.08, 'triangle', 0.3), 60);
-            setTimeout(() => playSound(659.25, 0.12, 'triangle', 0.3), 120);
+            playSound(440, 0.08, 'triangle', 0.2);
+            setTimeout(() => playSound(554.37, 0.08, 'triangle', 0.2), 60);
+            setTimeout(() => playSound(659.25, 0.12, 'triangle', 0.2), 120);
         }
 
         function playCrashSound() {
             if (isMuted) return;
             try {
                 const now = audioContext.currentTime;
-                const bufferSize = audioContext.sampleRate * 0.3;
+                const bufferSize = audioContext.sampleRate * 0.25;
                 const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
                 const noise = audioContext.createBufferSource();
                 noise.buffer = buffer;
                 const noiseGain = audioContext.createGain();
-                noiseGain.gain.setValueAtTime(0.3, now);
-                noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                noiseGain.gain.setValueAtTime(0.25, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 noise.connect(noiseGain);
                 noiseGain.connect(audioContext.destination);
                 noise.start(now);
-                playSound(70, 0.25, 'sine', 0.4);
+                playSound(70, 0.2, 'sine', 0.3);
             } catch (e) { }
         }
 
         function playGameOverSound() {
             if (isMuted) return;
-            playSound(440, 0.15, 'triangle', 0.2);
-            setTimeout(() => playSound(349.23, 0.15, 'triangle', 0.2), 150);
-            setTimeout(() => playSound(293.66, 0.2, 'triangle', 0.2), 300);
-            setTimeout(() => playSound(220, 0.35, 'triangle', 0.25), 450);
+            playSound(440, 0.12, 'triangle', 0.2);
+            setTimeout(() => playSound(349.23, 0.12, 'triangle', 0.2), 140);
+            setTimeout(() => playSound(293.66, 0.15, 'triangle', 0.2), 280);
+            setTimeout(() => playSound(220, 0.25, 'triangle', 0.2), 420);
         }
 
         function playStartSound() {
             if (isMuted) return;
-            playSound(330, 0.08, 'sine', 0.2);
-            setTimeout(() => playSound(440, 0.08, 'sine', 0.2), 70);
-            setTimeout(() => playSound(554.37, 0.08, 'sine', 0.2), 140);
-            setTimeout(() => playSound(659.25, 0.18, 'triangle', 0.25), 210);
+            playSound(330, 0.08, 'sine', 0.15);
+            setTimeout(() => playSound(440, 0.08, 'sine', 0.15), 70);
+            setTimeout(() => playSound(554.37, 0.08, 'sine', 0.15), 140);
+            setTimeout(() => playSound(659.25, 0.15, 'triangle', 0.2), 210);
         }
 
         function playLaneChangeSound() {
             if (isMuted) return;
-            playSound(400, 0.04, 'sine', 0.08);
-            setTimeout(() => playSound(600, 0.04, 'sine', 0.06), 25);
+            playSound(400, 0.03, 'sine', 0.06);
+            setTimeout(() => playSound(600, 0.03, 'sine', 0.05), 20);
         }
 
         function toggleSound() {
@@ -939,7 +893,7 @@
             }
         }
 
-        // Phone Gyro Tilt Steering
+        // Phone Gyro Tilt Steering - Proportional & Continuous Smooth Steer
         function toggleTiltSteering() {
             tiltEnabled = !tiltEnabled;
             const tiltBtn = document.getElementById('tiltToggleBtn');
@@ -976,23 +930,23 @@
 
         function handleOrientation(event) {
             if (!tiltEnabled || !gameRunning || gamePaused) return;
-            const gamma = event.gamma; // Phone Left/Right Tilt angle (-90 to +90)
-            const now = Date.now();
-            if (now - lastTiltTime < 180) return; // Debounce tilt steering
 
-            if (gamma < -12 && player.lane > 0) {
-                player.lane--;
-                updatePlayerPosition();
-                playLaneChangeSound();
-                triggerVibration(15);
-                lastTiltTime = now;
-            } else if (gamma > 12 && player.lane < 2) {
-                player.lane++;
-                updatePlayerPosition();
-                playLaneChangeSound();
-                triggerVibration(15);
-                lastTiltTime = now;
-            }
+            // event.gamma is left/right tilt angle (-90 to +90)
+            let gamma = event.gamma || 0;
+
+            // Clamp gamma between -20 and +20 for smooth natural wrist motion
+            gamma = Math.max(-20, Math.min(20, gamma));
+
+            // Continuous target X position calculation across full road width
+            const centerX = (canvas.width - player.width) / 2;
+            const tiltRange = (canvas.width - player.width) / 2 - 12;
+
+            // Smoothly calculate target position
+            player.targetX = centerX + (gamma / 20) * tiltRange;
+
+            // Update player.lane index smoothly for collision and spawning logic
+            const laneWidth = canvas.width / 3;
+            player.lane = Math.max(0, Math.min(2, Math.floor((player.x + player.width / 2) / laneWidth)));
         }
 
         // Initialize High Score Display
@@ -1039,7 +993,7 @@
             }
         }
 
-        // Draw Road with Glowing Kerbs
+        // Draw Road
         function drawRoad() {
             ctx.fillStyle = '#181b26';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1076,9 +1030,9 @@
             if (roadOffset > 1000) roadOffset = 0;
         }
 
-        // Render Sleek Sports Car (Player)
+        // Render Sleek Sports Car (Player) - Ultra Smooth Position Interpolation
         function drawPlayer() {
-            player.x += (player.targetX - player.x) * 0.25;
+            player.x += (player.targetX - player.x) * 0.28;
             ctx.save();
 
             // Headlights Cone Beam
@@ -1095,18 +1049,18 @@
             ctx.closePath();
             ctx.fill();
 
-            // Exhaust Nitro & Accelerator Flame Particles
+            // Exhaust Particles
             if (player.nitroActive || isPedalPressed || gameSpeed > 6) {
-                const flameCount = (player.nitroActive || isPedalPressed) ? 3 : 1;
+                const flameCount = (player.nitroActive || isPedalPressed) ? 2 : 1;
                 for (let i = 0; i < flameCount; i++) {
-                    const flameX = player.x + player.width / 2 + (Math.random() - 0.5) * 16;
-                    const flameY = player.y + player.height + Math.random() * 10;
+                    const flameX = player.x + player.width / 2 + (Math.random() - 0.5) * 14;
+                    const flameY = player.y + player.height + Math.random() * 8;
                     const color = player.nitroActive ? '#00f2fe' : (isPedalPressed ? '#2ed573' : '#ff793f');
-                    createParticles(flameX, flameY, color, 1, 4);
+                    createParticles(flameX, flameY, color, 1, 3);
                 }
             }
 
-            // Main Sports Car Body
+            // Main Body
             ctx.fillStyle = player.color;
             ctx.beginPath();
             ctx.roundRect(player.x, player.y, player.width, player.height, [12, 12, 8, 8]);
@@ -1155,16 +1109,13 @@
             ctx.fillRect(player.x + 4, player.y + player.height - 4, 10, 3);
             ctx.fillRect(player.x + player.width - 14, player.y + player.height - 4, 10, 3);
 
-            // Protective Shield Aura
+            // Protective Shield Energy Aura
             if (player.shieldActive) {
                 ctx.strokeStyle = '#00f2fe';
                 ctx.lineWidth = 3;
-                ctx.shadowColor = '#00f2fe';
-                ctx.shadowBlur = 15;
                 ctx.beginPath();
                 ctx.arc(player.x + player.width / 2, player.y + player.height / 2, player.height / 1.6, 0, Math.PI * 2);
                 ctx.stroke();
-                ctx.shadowBlur = 0;
             }
 
             // Coin Magnet Field Rings
@@ -1287,8 +1238,6 @@
             ctx.rotate(coin.rotation);
 
             ctx.fillStyle = '#ffd700';
-            ctx.shadowColor = '#ffd700';
-            ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.arc(0, 0, 14, 0, Math.PI * 2);
             ctx.fill();
@@ -1320,8 +1269,6 @@
             else if (pu.type === 'heart') { icon = '❤️'; color = '#ff4d4d'; }
 
             ctx.fillStyle = color;
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 12;
             ctx.beginPath();
             ctx.arc(0, 0, 16, 0, Math.PI * 2);
             ctx.fill();
@@ -1334,23 +1281,28 @@
             ctx.restore();
         }
 
-        // Particle System
-        function createParticles(x, y, color, count = 10, speedScale = 5) {
+        // High Performance Particle System
+        function createParticles(x, y, color, count = 8, speedScale = 4) {
+            if (particles.length > 40) {
+                particles.splice(0, particles.length - 30);
+            }
+
             for (let i = 0; i < count; i++) {
                 particles.push({
                     x: x,
                     y: y,
                     vx: (Math.random() - 0.5) * speedScale,
                     vy: (Math.random() - 0.5) * speedScale,
-                    life: 25,
-                    maxLife: 25,
+                    life: 20,
+                    maxLife: 20,
                     color: color
                 });
             }
         }
 
         function drawParticles() {
-            particles.forEach((p, index) => {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
                 ctx.fillStyle = p.color;
                 ctx.globalAlpha = p.life / p.maxLife;
                 ctx.fillRect(p.x, p.y, 4, 4);
@@ -1360,8 +1312,10 @@
                 p.y += p.vy;
                 p.life--;
 
-                if (p.life <= 0) particles.splice(index, 1);
-            });
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
         }
 
         function checkCollision(r1, r2) {
@@ -1447,25 +1401,24 @@
             }
 
             // Update Obstacles
-            obstacles.forEach((obs, index) => {
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
                 obs.y += currentSpeed;
 
                 if (obs.y > canvas.height) {
-                    obstacles.splice(index, 1);
+                    obstacles.splice(i, 1);
                     score += (player.nitroActive || isPedalPressed) ? 25 : 10;
                     updateScore();
-                }
-
-                if (checkCollision(player, obs)) {
+                } else if (checkCollision(player, obs)) {
                     if (player.shieldActive) {
                         player.shieldActive = false;
-                        createParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, '#00f2fe', 20, 8);
-                        obstacles.splice(index, 1);
-                        playSound(700, 0.15, 'sine', 0.3);
+                        createParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, '#00f2fe', 16, 6);
+                        obstacles.splice(i, 1);
+                        playSound(700, 0.15, 'sine', 0.25);
                         triggerVibration([30, 30, 30]);
                     } else {
-                        createParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, '#ff4757', 25, 8);
-                        obstacles.splice(index, 1);
+                        createParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, '#ff4757', 20, 6);
+                        obstacles.splice(i, 1);
                         lives--;
                         updateLives();
                         playCrashSound();
@@ -1474,10 +1427,11 @@
                         if (lives <= 0) gameOver();
                     }
                 }
-            });
+            }
 
             // Update Coins
-            coins.forEach((coin, index) => {
+            for (let i = coins.length - 1; i >= 0; i--) {
+                const coin = coins[i];
                 if (player.magnetActive) {
                     const dx = (player.x + player.width / 2) - (coin.x + coin.width / 2);
                     const dy = (player.y + player.height / 2) - (coin.y + coin.height / 2);
@@ -1490,24 +1444,26 @@
 
                 coin.y += currentSpeed;
 
-                if (coin.y > canvas.height) coins.splice(index, 1);
-
-                if (checkCollision(player, coin)) {
-                    createParticles(coin.x + coin.width / 2, coin.y + coin.height / 2, '#ffd700', 12, 4);
-                    coins.splice(index, 1);
+                if (coin.y > canvas.height) {
+                    coins.splice(i, 1);
+                } else if (checkCollision(player, coin)) {
+                    createParticles(coin.x + coin.width / 2, coin.y + coin.height / 2, '#ffd700', 10, 4);
+                    coins.splice(i, 1);
                     score += (player.nitroActive || isPedalPressed) ? 100 : 50;
                     updateScore();
                     playCoinSound();
                     triggerVibration(25);
                 }
-            });
+            }
 
             // Update Power-ups
-            powerups.forEach((pu, index) => {
+            for (let i = powerups.length - 1; i >= 0; i--) {
+                const pu = powerups[i];
                 pu.y += currentSpeed;
-                if (pu.y > canvas.height) powerups.splice(index, 1);
 
-                if (checkCollision(player, pu)) {
+                if (pu.y > canvas.height) {
+                    powerups.splice(i, 1);
+                } else if (checkCollision(player, pu)) {
                     playPowerupSound();
                     triggerVibration([40, 30, 40]);
 
@@ -1525,10 +1481,10 @@
                         updateLives();
                     }
 
-                    createParticles(pu.x + pu.width / 2, pu.y + pu.height / 2, '#00f2fe', 20, 6);
-                    powerups.splice(index, 1);
+                    createParticles(pu.x + pu.width / 2, pu.y + pu.height / 2, '#00f2fe', 16, 5);
+                    powerups.splice(i, 1);
                 }
-            });
+            }
 
             if (frameCount % 450 === 0 && baseSpeed < 10) {
                 baseSpeed += 0.35;
@@ -1559,7 +1515,7 @@
                 document.getElementById('highScoreHud').textContent = highScore;
                 if (!newHighScoreAchieved) {
                     newHighScoreAchieved = true;
-                    createParticles(canvas.width / 2, 80, '#ffd700', 30, 8);
+                    createParticles(canvas.width / 2, 80, '#ffd700', 25, 6);
                 }
             }
         }
